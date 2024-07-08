@@ -1,0 +1,19 @@
+ADD_EXECUTABLE(Server Server.cpp)
+TARGET_LINK_LIBRARIES(Server PRIVATE 
+    Common 
+    Threads::Threads 
+    ${Boost_LIBRARIES}
+)
+TARGET_INCLUDE_DIRECTORIES(Server PUBLIC
+  ${CMAKE_CURRENT_BINARY_DIR}
+)
+
+ADD_EXECUTABLE(Client Client.cpp)
+TARGET_LINK_LIBRARIES(Client PRIVATE
+    Common
+    Threads::Threads
+    ${Boost_LIBRARIES}
+)
+TARGET_INCLUDE_DIRECTORIES(Client PUBLIC
+  ${CMAKE_CURRENT_BINARY_DIR}
+)
