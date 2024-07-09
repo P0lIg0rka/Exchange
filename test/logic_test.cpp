@@ -16,6 +16,7 @@ protected:
   static void TearDownTestSuite() {}
 
   void SetUp() override {
+    test_server_up = true;
     boost::asio::io_service io_service;
 
     tcp::resolver resolver(io_service);
@@ -23,24 +24,31 @@ protected:
     tcp::resolver::iterator iterator = resolver.resolve(query);
 
     s_ = new tcp::socket(io_service);
-    s_->connect(*iterator);
+    try {
+      s_->connect(*iterator);
 
-    uIds_.clear();
-    uIds_.resize(2);
-    SendMessage(*s_, "0", Requests::Registration, "first");
-    uIds_[0] = ReadMessage(*s_);
-    SendMessage(*s_, "0", Requests::Registration, "second");
-    uIds_[1] = ReadMessage(*s_);
+      uIds_.clear();
+      uIds_.resize(2);
+      SendMessage(*s_, "0", Requests::Registration, "first");
+      uIds_[0] = ReadMessage(*s_);
+      SendMessage(*s_, "0", Requests::Registration, "second");
+      uIds_[1] = ReadMessage(*s_);
+    } catch (...) {
+      test_server_up = false;
+    }
   }
 
   void TearDown() override {
-    SendMessage(*s_, "0", Requests::ClearData, "0");
-    ReadMessage(*s_);
+    if (test_server_up) {
+      SendMessage(*s_, "0", Requests::ClearData, "0");
+      ReadMessage(*s_);
+    }
     delete s_;
   }
 public:
   std::vector<std::string> uIds_;
   static tcp::socket* s_;
+  bool test_server_up;
 };
 
 tcp::socket* ServerLogicTest::s_ = nullptr;
@@ -48,6 +56,7 @@ tcp::socket* ServerLogicTest::s_ = nullptr;
 
 
 TEST_P(ServerLogicTest, BidsCreation) {
+  ASSERT_TRUE(test_server_up);
   for (const auto& arg: std::get<2>(GetParam())) {
     SendMessage(*s_, uIds_[arg.first], Requests::Bid, arg.second);
     ReadMessage(*s_);
