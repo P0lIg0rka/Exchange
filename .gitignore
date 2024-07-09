@@ -1,6 +1,9 @@
 # Cmake build
 build
 
+# VSCode cache
+.vscode
+
 # Prerequisites
 *.d
 
