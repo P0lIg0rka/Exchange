@@ -1,0 +1,12 @@
+ADD_LIBRARY(ServerLib STATIC
+  server_lib.cpp
+)
+TARGET_INCLUDE_DIRECTORIES(ServerLib PUBLIC
+  ${CMAKE_CURRENT_BINARY_DIR}
+  lib
+)
+TARGET_LINK_LIBRARIES(ServerLib PUBLIC 
+  Common
+  Threads::Threads 
+  ${Boost_LIBRARIES}
+)

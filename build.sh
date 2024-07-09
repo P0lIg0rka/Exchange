@@ -1,6 +1,3 @@
-if find . -name "build"; then
-rm  -rf build
-fi
-mkdir build
+mkdir -p build
 cmake -S . -B build
 cmake --build build

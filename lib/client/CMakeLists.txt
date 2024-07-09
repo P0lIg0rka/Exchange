@@ -1,0 +1,12 @@
+ADD_LIBRARY(ClientLib STATIC
+  client_lib.cpp
+)
+TARGET_INCLUDE_DIRECTORIES(ClientLib PUBLIC
+  ${CMAKE_CURRENT_BINARY_DIR}
+  lib
+)
+TARGET_LINK_LIBRARIES(ClientLib PUBLIC 
+  Common
+  Threads::Threads 
+  ${Boost_LIBRARIES}
+)

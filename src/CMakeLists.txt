@@ -1,7 +1,7 @@
 ADD_EXECUTABLE(Server Server.cpp)
 TARGET_LINK_LIBRARIES(Server PRIVATE 
     Common 
-    Threads::Threads 
+    ServerLib
     ${Boost_LIBRARIES}
 )
 TARGET_INCLUDE_DIRECTORIES(Server PUBLIC
@@ -11,7 +11,7 @@ TARGET_INCLUDE_DIRECTORIES(Server PUBLIC
 ADD_EXECUTABLE(Client Client.cpp)
 TARGET_LINK_LIBRARIES(Client PRIVATE
     Common
-    Threads::Threads
+    ClientLib
     ${Boost_LIBRARIES}
 )
 TARGET_INCLUDE_DIRECTORIES(Client PUBLIC
