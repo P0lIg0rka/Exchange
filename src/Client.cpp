@@ -1,8 +1,7 @@
 #include <boost/asio.hpp>
-#include <iostream>
-
-#include <common.hpp>
 #include <client_lib.hpp>
+#include <common.hpp>
+#include <iostream>
 
 using boost::asio::ip::tcp;
 
@@ -52,8 +51,7 @@ int main() {
         std::stringstream balance(ReadMessage(s));
         int64_t usd, rub;
         balance >> usd >> rub;
-        std::cout << "RUB: " << rub << std::endl
-                  << "USD: " << usd << std::endl;
+        std::cout << "RUB: " << rub << std::endl << "USD: " << usd << std::endl;
         break;
       }
       case 3: {

@@ -1,10 +1,10 @@
-#include <gtest/gtest.h>
-#include <common.hpp>
-#include <thread>
-#include <server_lib.hpp>
-#include <client_lib.hpp>
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
+#include <client_lib.hpp>
+#include <common.hpp>
+#include <gtest/gtest.h>
+#include <server_lib.hpp>
+#include <thread>
 
 typedef std::vector<std::pair<size_t, std::string>> Arguments;
 typedef std::tuple<int64_t, int64_t, Arguments> Params;
@@ -45,19 +45,18 @@ protected:
     }
     delete s_;
   }
+
 public:
   std::vector<std::string> uIds_;
-  static tcp::socket* s_;
+  static tcp::socket *s_;
   bool test_server_up;
 };
 
-tcp::socket* ServerLogicTest::s_ = nullptr;
-
-
+tcp::socket *ServerLogicTest::s_ = nullptr;
 
 TEST_P(ServerLogicTest, BidsCreation) {
   ASSERT_TRUE(test_server_up);
-  for (const auto& arg: std::get<2>(GetParam())) {
+  for (const auto &arg : std::get<2>(GetParam())) {
     SendMessage(*s_, uIds_[arg.first], Requests::Bid, arg.second);
     ReadMessage(*s_);
   }
@@ -80,41 +79,26 @@ TEST_P(ServerLogicTest, BidsCreation) {
 }
 
 INSTANTIATE_TEST_SUITE_P(
-  BidCreationCorrectness,
-  ServerLogicTest,
-  ::testing::Values(
-    std::make_tuple<int64_t, int64_t, Arguments>(
-      200,
-      15,
-      {
-        {0, "10 10 sell"},
-        {0, "10 20 sell"},
-        {1, "15 25 buy"}
-      }
-    ),
-    std::make_tuple<int64_t, int64_t, Arguments>(
-      0,
-      0,
-      {
-        {0, "10 10 sell"},
-        {0, "10 20 sell"},
-        {0, "10 15 sell"},
-        {1, "15 9 buy"},
-        {1, "15 8 buy"},
-        {1, "15 6 buy"}
-      }
-    ),
-    std::make_tuple<int64_t, int64_t, Arguments>(
-      200,
-      15,
-      {                    //USD RUB
-        {0, "10 10 sell"}, // 0   0
-        {1, "5 15 buy"},   // 5  -50
-        {0, "10 20 sell"}, // 5  -50
-        {1, "10 25 buy"},  //15 -200
-        {1, "15 15 buy"},
-        {1, "15 10 buy"}
-      }
-    )
-  )
-);
+    BidCreationCorrectness,
+    ServerLogicTest,
+    ::testing::Values(
+        std::make_tuple<int64_t, int64_t, Arguments>(200, 15, {{0, "10 10 sell"}, {0, "10 20 sell"}, {1, "15 25 buy"}}),
+        std::make_tuple<int64_t, int64_t, Arguments>(
+            0,
+            0,
+            {{0, "10 10 sell"},
+             {0, "10 20 sell"},
+             {0, "10 15 sell"},
+             {1, "15 9 buy"},
+             {1, "15 8 buy"},
+             {1, "15 6 buy"}}),
+        std::make_tuple<int64_t, int64_t, Arguments>(
+            200,
+            15,
+            {                   // USD RUB
+             {0, "10 10 sell"}, // 0   0
+             {1, "5 15 buy"},   // 5  -50
+             {0, "10 20 sell"}, // 5  -50
+             {1, "10 25 buy"},  // 15 -200
+             {1, "15 15 buy"},
+             {1, "15 10 buy"}})));

@@ -1,17 +1,19 @@
 #include <boost/asio.hpp>
-#include <iostream>
-
-#include <common.hpp>
-#include <json.hpp>
 #include <client_lib.hpp>
+#include <common.hpp>
+#include <iostream>
+#include <json.hpp>
 
 using boost::asio::ip::tcp;
 
 // Отправка сообщения на сервер по шаблону.
-void SendMessage(tcp::socket &aSocket, const std::string &aId,
-                 const std::string &aRequestType, const std::string &aMessage) {
+void SendMessage(
+    tcp::socket &aSocket,
+    const std::string &aId,
+    const std::string &aRequestType,
+    const std::string &aMessage) {
   nlohmann::json req;
-  req["UserId"] = aId;
+  req["UserId"]  = aId;
   req["ReqType"] = aRequestType;
   req["Message"] = aMessage;
 
